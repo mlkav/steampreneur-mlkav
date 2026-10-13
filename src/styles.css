@@ -75,34 +75,7 @@ h1 {
 }
 .intro p { margin: 14px 0 0; font-size: 15px; color: var(--muted); }
 
-.toolbar { display: flex; gap: 12px; }
-.search-box {
-  height: 46px;
-  padding: 0 13px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex: 1;
-  color: #92958d;
-  border: 1px solid #e6e7e1;
-  background: #fff;
-  border-radius: 8px;
-}
-.search-box:focus-within { border-color: #9bb59e; box-shadow: 0 0 0 3px #47765312; }
-.search-box input { width: 100%; min-width: 0; outline: none; border: 0; color: #30332d; background: transparent; font-size: 13px; }
-.search-box input::placeholder { color: #a2a49d; }
-.search-box input::-webkit-search-cancel-button { cursor: pointer; }
-kbd {
-  display: grid;
-  place-items: center;
-  min-width: 21px;
-  height: 21px;
-  color: #92958d;
-  background: #f6f6f3;
-  border: 1px solid #e8e9e4;
-  border-radius: 4px;
-  font: 11px 'DM Mono', monospace;
-}
+.toolbar { display: flex; }
 .create-button, .save-button {
   display: inline-flex;
   justify-content: center;
@@ -201,7 +174,6 @@ kbd {
   .intro { padding: 39px 0 25px; }
   h1 { font-size: 39px; letter-spacing: -2px; }
   .intro p { max-width: 300px; font-size: 13px; line-height: 1.6; }
-  .toolbar { gap: 8px; }
   .create-button { width: 44px; height: 44px; padding: 0; flex: 0 0 44px; }
   .create-button span { display: none; }
   .notes-grid { grid-template-columns: 1fr; gap: 10px; }
