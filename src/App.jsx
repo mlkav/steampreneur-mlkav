@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const STORAGE_KEY = 'catatan-sederhana';
 
@@ -26,12 +26,6 @@ function formatDate(value) {
 
 function Icon({ name, size = 20 }) {
   const paths = {
-    search: (
-      <>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-4-4" />
-      </>
-    ),
     plus: <path d="M12 5v14m-7-7h14" />,
     pin: (
       <>
@@ -74,11 +68,9 @@ function Icon({ name, size = 20 }) {
 
 function App() {
   const [notes, setNotes] = useState(readNotes);
-  const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
   const [editingNote, setEditingNote] = useState(null);
   const [storageError, setStorageError] = useState('');
-  const searchInputRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -94,14 +86,6 @@ function App() {
     function handleKeyDown(event) {
       if (event.key === 'Escape') {
         setEditingNote(null);
-      } else if (
-        event.key === '/' &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !['INPUT', 'TEXTAREA'].includes(document.activeElement?.tagName)
-      ) {
-        event.preventDefault();
-        searchInputRef.current?.focus();
       }
     }
 
@@ -110,20 +94,14 @@ function App() {
   }, []);
 
   const filteredNotes = useMemo(() => {
-    const normalizedQuery = query.trim().toLocaleLowerCase('id');
     return notes
       .filter((note) => activeFilter !== 'pinned' || note.pinned)
-      .filter(
-        (note) =>
-          !normalizedQuery ||
-          `${note.title} ${note.content}`.toLocaleLowerCase('id').includes(normalizedQuery),
-      )
       .sort(
         (a, b) =>
           Number(b.pinned) - Number(a.pinned) ||
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
       );
-  }, [notes, query, activeFilter]);
+  }, [notes, activeFilter]);
 
   function saveNote(event) {
     event.preventDefault();
@@ -190,18 +168,6 @@ function App() {
         </div>
 
         <div className="toolbar">
-          <label className="search-box">
-            <Icon name="search" size={19} />
-            <input
-              ref={searchInputRef}
-              type="search"
-              placeholder="Cari catatan..."
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              aria-label="Cari catatan"
-            />
-            <kbd>/</kbd>
-          </label>
           <button className="create-button" onClick={() => setEditingNote({})}>
             <Icon name="plus" size={19} />
             <span>Catatan baru</span>
@@ -265,22 +231,16 @@ function App() {
           </div>
         ) : (
           <div className="empty-state">
-            <span className="empty-icon"><Icon name={query || activeFilter === 'pinned' ? 'search' : 'note'} size={25} /></span>
+            <span className="empty-icon"><Icon name={activeFilter === 'pinned' ? 'pin' : 'note'} size={25} /></span>
             <h2>
-              {query
-                ? 'Catatan tidak ditemukan'
-                : activeFilter === 'pinned'
-                  ? 'Belum ada catatan disematkan'
-                  : 'Mulai dengan satu ide'}
+              {activeFilter === 'pinned' ? 'Belum ada catatan disematkan' : 'Mulai dengan satu ide'}
             </h2>
             <p>
-              {query
-                ? 'Coba kata kunci lain atau periksa kembali ejaannya.'
-                : activeFilter === 'pinned'
-                  ? 'Sematkan catatan favoritmu supaya mudah ditemukan.'
-                  : 'Pikiran bagus layak disimpan. Buat catatan pertamamu sekarang.'}
+              {activeFilter === 'pinned'
+                ? 'Sematkan catatan favoritmu supaya mudah ditemukan.'
+                : 'Pikiran bagus layak disimpan. Buat catatan pertamamu sekarang.'}
             </p>
-            {!query && activeFilter === 'all' && (
+            {activeFilter === 'all' && (
               <button className="text-button" onClick={() => setEditingNote({})}>
                 Buat catatan pertama <Icon name="arrow" size={16} />
               </button>
